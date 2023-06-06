@@ -137,7 +137,7 @@ def train_sam(args, net: nn.Module, optimizer, train_loader,
                 if "Adapter" not in n:
                     value.requires_grad = False
             imge= net.image_encoder(imgs)
-
+            print(imge.shape)
             with torch.no_grad():
                 # imge= net.image_encoder(imgs)
                 se, de = net.prompt_encoder(
