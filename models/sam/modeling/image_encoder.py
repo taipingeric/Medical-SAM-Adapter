@@ -15,7 +15,8 @@ from typing import Optional, Tuple, Type
 from .common import LayerNorm2d, MLPBlock, Adapter
 
 
-# This class and its supporting functions below lightly adapted from the ViTDet backbone available at: https://github.com/facebookresearch/detectron2/blob/main/detectron2/modeling/backbone/vit.py # noqa
+# This class and its supporting functions below lightly adapted from the ViTDet backbone available at: 
+# https://github.com/facebookresearch/detectron2/blob/main/detectron2/modeling/backbone/vit.py # noqa
 class ImageEncoderViT(nn.Module):
     def __init__(
         self,
@@ -76,9 +77,6 @@ class ImageEncoderViT(nn.Module):
 
         self.blocks = nn.ModuleList()
         for i in range(depth):
-            print(f"block: {i} ")
-            print(f'window dize: {window_size if i not in global_attn_indexes else 0}')
-            print(f'input size: {(img_size // patch_size, img_size // patch_size)}')
             block = Block(
                 args= self.args,
                 dim=embed_dim,
@@ -148,6 +146,7 @@ class Block(nn.Module):
             dim (int): Number of input channels.
             num_heads (int): Number of attention heads in each ViT block.
             mlp_ratio (float): Ratio of mlp hidden dim to embedding dim.
+            scale: scale the residual of the output fomr Adapter
             qkv_bias (bool): If True, add a learnable bias to query, key, value.
             norm_layer (nn.Module): Normalization layer.
             act_layer (nn.Module): Activation layer.
@@ -393,6 +392,7 @@ def add_decomposed_rel_pos(
 
     return attn
 
+# for 3D input
 def closest_numbers(target):
     a = int(target ** 0.5)
     b = a + 1
@@ -437,3 +437,42 @@ class PatchEmbed(nn.Module):
         # B C H W -> B H W C
         x = x.permute(0, 2, 3, 1)
         return x
+
+"""
+block: 0 
+window dize: 14
+input size: (64, 64)
+block: 1 
+window dize: 14
+input size: (64, 64)
+block: 2 
+window dize: 0
+input size: (64, 64)
+block: 3 
+window dize: 14
+input size: (64, 64)
+block: 4 
+window dize: 14
+input size: (64, 64)
+block: 5 
+window dize: 0
+input size: (64, 64)
+block: 6 
+window dize: 14
+input size: (64, 64)
+block: 7 
+window dize: 14
+input size: (64, 64)
+block: 8 
+window dize: 0
+input size: (64, 64)
+block: 9 
+window dize: 14
+input size: (64, 64)
+block: 10 
+window dize: 14
+input size: (64, 64)
+block: 11 
+window dize: 0
+input size: (64, 64)
+"""
