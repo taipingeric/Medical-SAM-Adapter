@@ -28,7 +28,7 @@ from dataset import *
 from conf import settings
 import time
 import cfg
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from torch.utils.data import DataLoader, random_split
 from utils import *
 import function 
@@ -123,7 +123,7 @@ checkpoint_path = os.path.join(checkpoint_path, '{net}-{epoch}-{type}.pth')
 '''begain training'''
 best_acc = 0.0
 best_tol = 1e4
-for epoch in range(settings.EPOCH):
+for epoch in tqdm(range(settings.EPOCH)):
     if args.mod == 'sam_adpt':
         net.train()
         time_start = time.time()
@@ -149,14 +149,14 @@ for epoch in range(settings.EPOCH):
                 is_best = True
 
                 save_checkpoint({
-                'epoch': epoch + 1,
-                'model': args.net,
-                'state_dict': sd,
-                'optimizer': optimizer.state_dict(),
-                'best_tol': best_tol,
-                'path_helper': args.path_helper,
-            }, is_best, args.path_helper['ckpt_path'], filename="best_checkpoint")
+                    'epoch': epoch + 1,
+                    'model': args.net,
+                    'state_dict': sd,
+                    'optimizer': optimizer.state_dict(),
+                    'best_tol': best_tol,
+                    'path_helper': args.path_helper,
+                }, is_best, args.path_helper['ckpt_path'], filename="best_checkpoint")
             else:
                 is_best = False
 
-writer.close()
+# writer.close()
