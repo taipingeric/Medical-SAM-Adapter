@@ -76,6 +76,9 @@ class ImageEncoderViT(nn.Module):
 
         self.blocks = nn.ModuleList()
         for i in range(depth):
+            print(f"block: {i} ")
+            print(f'window dize: {window_size if i not in global_attn_indexes else 0}')
+            print(f'input size: {(img_size // patch_size, img_size // patch_size)}')
             block = Block(
                 args= self.args,
                 dim=embed_dim,
