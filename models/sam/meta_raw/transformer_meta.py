@@ -80,14 +80,12 @@ class TwoWayTransformer(nn.Module):
         """
         # BxCxHxW -> BxHWxC == B x N_image_tokens x C
         bs, c, h, w = image_embedding.shape
-
-        # (bs, c, h, w) -> (bs, c, hw) -> (bs, hw, c)
         image_embedding = image_embedding.flatten(2).permute(0, 2, 1)
         image_pe = image_pe.flatten(2).permute(0, 2, 1)
 
         # Prepare queries
-        queries = point_embedding # (bs, N_points, c)
-        keys = image_embedding # (bs, hw, c)
+        queries = point_embedding
+        keys = image_embedding
 
         # Apply transformer blocks and final layernorm
         for layer in self.layers:
@@ -100,11 +98,11 @@ class TwoWayTransformer(nn.Module):
 
         # Apply the final attention layer from the points to the image
         q = queries + point_embedding
-        k = keys + image_pe # (bs, hw, c)
+        k = keys + image_pe
         attn_out = self.final_attn_token_to_image(q=q, k=k, v=keys)
-        queries = queries + attn_out # (bs, hw, c)
+        queries = queries + attn_out
         queries = self.norm_final_attn(queries)
-        # (bs, hw, c), (bs, hw, c)
+
         return queries, keys
 
 
@@ -119,11 +117,10 @@ class TwoWayAttentionBlock(nn.Module):
         skip_first_layer_pe: bool = False,
     ) -> None:
         """
-        A transformer block with four layers: 
-        (1) self-attention of sparse inputs, 
-        (2) cross attention of sparse inputs to dense inputs, 
-        (3) mlpblock on sparse inputs, and 
-        (4) cross attention of dense inputs to sparseinputs.
+        A transformer block with four layers: (1) self-attention of sparse
+        inputs, (2) cross attention of sparse inputs to dense inputs, (3) mlp
+        block on sparse inputs, and (4) cross attention of dense inputs to sparse
+        inputs.
 
         Arguments:
           embedding_dim (int): the channel dimension of the embeddings
