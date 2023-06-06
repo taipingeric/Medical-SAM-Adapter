@@ -22,7 +22,7 @@ from torch.utils.data import DataLoader
 #from dataset import *
 from torch.autograd import Variable
 from PIL import Image
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 #from models.discriminatorlayer import discriminator
 from dataset import *
 from conf import settings
@@ -110,8 +110,8 @@ checkpoint_path = os.path.join(settings.CHECKPOINT_PATH, args.net, settings.TIME
 #use tensorboard
 if not os.path.exists(settings.LOG_DIR):
     os.mkdir(settings.LOG_DIR)
-writer = SummaryWriter(log_dir=os.path.join(
-        settings.LOG_DIR, args.net, settings.TIME_NOW))
+# writer = SummaryWriter(log_dir=os.path.join(
+#         settings.LOG_DIR, args.net, settings.TIME_NOW))
 # input_tensor = torch.Tensor(args.b, 3, 256, 256).cuda(device = GPUdevice)
 # writer.add_graph(net, Variable(input_tensor, requires_grad=True))
 
@@ -127,14 +127,16 @@ for epoch in range(settings.EPOCH):
     if args.mod == 'sam_adpt':
         net.train()
         time_start = time.time()
-        loss = function.train_sam(args, net, optimizer, nice_train_loader, epoch, writer, vis = args.vis)
+        loss = function.train_sam(args, net, optimizer, nice_train_loader, epoch, None, vis = args.vis)
+        # loss = function.train_sam(args, net, optimizer, nice_train_loader, epoch, writer, vis = args.vis)
         logger.info(f'Train loss: {loss}|| @ epoch {epoch}.')
         time_end = time.time()
         print('time_for_training ', time_end - time_start)
 
         net.eval()
         if epoch and epoch % args.val_freq == 0 or epoch == settings.EPOCH-1:
-            tol, (eiou, edice) = function.validation_sam(args, nice_test_loader, epoch, net, writer)
+            tol, (eiou, edice) = function.validation_sam(args, nice_test_loader, epoch, net, None)
+            # tol, (eiou, edice) = function.validation_sam(args, nice_test_loader, epoch, net, writer)
             logger.info(f'Total score: {tol}, IOU: {eiou}, DICE: {edice} || @ epoch {epoch}.')
 
             if args.distributed != 'none':

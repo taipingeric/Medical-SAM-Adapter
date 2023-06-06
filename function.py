@@ -70,7 +70,7 @@ epoch_loss_values = []
 metric_values = []
 
 def train_sam(args, net: nn.Module, optimizer, train_loader,
-          epoch, writer, schedulers=None, vis = 50):
+          epoch, writer=None, schedulers=None, vis = 50):
     hard = 0
     epoch_loss = 0
     ind = 0
