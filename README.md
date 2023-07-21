@@ -1,3 +1,7 @@
+```bash
+python train.py -net sam -mod sam_adpt -exp_name msa_test_isic -sam_ckpt ./checkpoint/sam/sam_vit_b_01ec64.pth -image_size 1024 -b 1 -dataset isic -data_path ./data/isic
+```
+
 # Medical-SAM-Adapter
 
 Medical SAM Adapter, or say MSA, is a project to fineturn [SAM](https://github.com/facebookresearch/segment-anything) using [Adaption](https://lightning.ai/pages/community/tutorial/lora-llm/) for the Medical Imaging.
