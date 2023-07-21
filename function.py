@@ -137,7 +137,6 @@ def train_sam(args, net: nn.Module, optimizer, train_loader,
                 if "Adapter" not in n:
                     value.requires_grad = False
             imge= net.image_encoder(imgs)
-            print(imge.shape)
             with torch.no_grad():
                 # imge= net.image_encoder(imgs)
                 se, de = net.prompt_encoder(
@@ -215,12 +214,12 @@ def validation_sam(args, val_loader, epoch, net: nn.Module, clean_dir=True):
 
             while (buoy + evl_ch) <= imgsw.size(-1):
                 if args.thd:
-                    pt = ptw[:,:,buoy: buoy + evl_ch]
+                    pt = ptw[:, :, buoy: buoy+evl_ch]
                 else:
                     pt = ptw
 
-                imgs = imgsw[...,buoy:buoy + evl_ch]
-                masks = masksw[...,buoy:buoy + evl_ch]
+                imgs = imgsw[..., buoy:buoy + evl_ch]
+                masks = masksw[..., buoy:buoy + evl_ch]
                 buoy += evl_ch
 
                 if args.thd:

@@ -1134,17 +1134,20 @@ def random_click(mask, point_labels = 1, inout = 1):
 
 
 def generate_click_prompt(img, msk, pt_label = 1):
+    """
+    Generate a click prompt for the image
+    """
     # return: prompt, prompt mask
     pt_list = []
     msk_list = []
     b, c, h, w, d = msk.size()
-    msk = msk[:,0,:,:,:]
+    msk = msk[:, 0, :, :, :]
     for i in range(d):
         pt_list_s = []
         msk_list_s = []
         for j in range(b):
-            msk_s = msk[j,:,:,i]
-            indices = torch.nonzero(msk_s)
+            msk_s = msk[j, :, :, i]
+            indices = torch.nonzero(msk_s) # 找 H, W 中non zero indices
             if indices.size(0) == 0:
                 # generate a random array between [0-h, 0-h]:
                 random_index = torch.randint(0, h, (2,)).to(device = msk.device)
